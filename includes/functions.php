@@ -12,9 +12,9 @@ function Layout($LayoutName, $data = [])
 }
 
 // hàm xử lý gửi email
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer; // tạo đối tượng email, thiết lập người gửi, người nhận, tiêu đề, nội dung
+use PHPMailer\PHPMailer\SMTP; // lớp này chịu trách nhiệm xử lý giao tiếp với máy chủ mail qua giao thức SMTP
+use PHPMailer\PHPMailer\Exception; // bắt lỗi và hiển thị lỗi
 function sendMail($emailTo, $subject, $content)
 {
 
@@ -83,7 +83,7 @@ function filterData($method = ''){ // tham số method này nếu ko truyề
             if(!empty($_GET)){ // sau khi xác đinh get xly
                 foreach($_GET as $key => $value){ // lọc key và value
                     $key = strip_tags($key);
-                    if(is_array($vlue)){ // nếu value là mảng
+                    if(is_array($value)){ // nếu value là mảng
                         $filterArr[$key] = filter_var($_GET[$key], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY); 
                         // xóa bỏ ký tự đặc biệt, FILTER_REQUIRE_ARRAY và xly value dạng cho mảng
 
@@ -115,7 +115,7 @@ function filterData($method = ''){ // tham số method này nếu ko truyề
             if(!empty($_GET)){ // sau khi xác đinh get xly
                 foreach($_GET as $key => $value){ // lọc key và value
                     $key = strip_tags($key);
-                    if(is_array($vlue)){ // nếu value là mảng
+                    if(is_array($value)){ // nếu value là mảng
                         $filterArr[$key] = filter_var($_GET[$key], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY); 
                         // xóa bỏ ký tự đặc biệt, FILTER_REQUIRE_ARRAY và xly value dạng cho mảng
 
@@ -178,4 +178,22 @@ function isPhone($phone){
         return true;
     }
     return false;
+}
+
+// validate chung form
+function getMsg($msg, $type = 'success'){
+   echo '<div class="annouce-message alert alert-' . $type . ' "> ';
+   echo $msg;
+   echo '</div>';
+}
+
+// hiện lỗi input form
+function formErr($err, $fieldName){
+    //reset lây ptu trong key
+    return (!empty($err[$fieldName])) ? ' <div class="error">' .reset($err[$fieldName]) . ' </div>' : false;
+}
+
+// hàm lưu giá trị cũ
+function oldData($oldData, $fieldName) {
+    return !empty($oldData[$fieldName]) ? $oldData[$fieldName] : null;
 }

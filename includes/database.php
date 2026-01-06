@@ -69,7 +69,9 @@ function insert($table, $data) {
 
     $stm = $conn->prepare($sql); // sql injection 
     // thực thi câu lệnh 
-    $stm->execute($data);
+    $rel = $stm->execute($data);
+
+    return $rel;
 }
 
 // update dlieu

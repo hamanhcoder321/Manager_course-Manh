@@ -44,7 +44,7 @@ function removeSession($key = ''){
 function setSessionFlash($key, $value){
     $key = $key . 'Flash'; // nối flash phân biệt key thường và key flash phục vụ xóa rõ hơn
     $rel = setSession($key, $value); // tạo biến rel lưu kq
-    return $rel; // return biến kq 
+    return $rel; // return biến $rel 
 }
 
 // lấy session flash 

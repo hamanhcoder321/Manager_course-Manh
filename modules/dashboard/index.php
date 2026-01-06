@@ -2,8 +2,13 @@
 if (!defined('_Manh')) {
     echo 'truy cập ko hợp lệ';
 }
-require_once './templates/layouts/header.php';
-require_once './templates/layouts/sidebar.php';
+
+$data = [
+    'title' => 'Hệ Thống Manh'
+];
+
+Layout('header', $data);
+Layout('sidebar');
 ?>
 <!--begin::App Main-->
 <main class="app-main">
@@ -115,4 +120,4 @@ require_once './templates/layouts/sidebar.php';
 
 
 <?php
-require_once './templates/layouts/footer.php';
+Layout('footer');

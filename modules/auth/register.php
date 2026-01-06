@@ -7,6 +7,7 @@ $data = [
 ];
 Layout('header-auth', $data);
 
+
 if (isPost()) {
     // lọc dữ liệu gọi lại hàm filterData ở fuctions.php gán lại cho biến $filter
     $filter = filterData();
@@ -58,20 +59,61 @@ if (isPost()) {
         }
     }
 
-    // validate confirm-pass
-    if (empty(trim($filter['confirm-pass']))) {
-        $err['confirm-pass']['required'] = 'Vui lòng nhập lại mật khẩu';
+    // validate confirm_pass
+    if (empty(trim($filter['confirm_pass']))) {
+        $err['confirm_pass']['required'] = 'Vui lòng nhập lại mật khẩu';
     } else {
-        if (trim($filter['password']) !== trim($filter['confirm-pass'])) { // so sánh 2 pass dlieu và giá trị
-            $err['confirm-pass']['like'] = 'Nhập lại mật khẩu không đúng';
+        if (trim($filter['password']) !== trim($filter['confirm_pass'])) { // so sánh 2 pass dlieu và giá trị
+            $err['confirm_pass']['like'] = 'Nhập lại mật khẩu không đúng';
         }
     }
 
-    if (!empty($err)) {
-        echo '<pre>';
-        print_r($err);
-        echo '</pre>';
+    if (empty($err)){
+        // insert table: user
+        $activeToken = sha1(uniqid().time()); // lấy mã hóa thông tin gửi email kích hoạt
+        $data = [
+            'fullname' => $filter['fullname'],
+            // 'address'  => $filter['address'],
+            'phone'    => $filter['phone'],
+            'password' => password_hash($filter['password'], PASSWORD_DEFAULT),
+            'email'    => $filter['email'],
+            'active_token' => $activeToken,
+            'group_id'     => 1,
+            'created_at'   => date('Y:m:d H:i:s')
+        ];
+
+        $checkInsert = insert('users', $data);
+
+        if($checkInsert){
+            // bắn email cho users
+            $emailTo = $filter['email'];
+            $subject = 'Kích hoạt tài khoản hệ thống';
+            $content = 'Chúc mừng bạn đã đăng ký tài khoản thành công <br>';
+            $content .= 'Để kích hoạt tài khoản, bạn hãy click vào đường link bên dưới: <br>';
+            $content .= _HOST_URL . '/?module=auth&action=active&token=' .$activeToken. '<br>';
+            $content .= 'Thank you so match';
+
+            sendMail($emailTo, $subject, $content);
+
+            setSessionFlash('msg', 'Đăng ký thành công , vui lòng kích hoạt tài khoản'); // gọi hàm setSession bên session, lưu giá trị cũ
+            setSessionFlash('msg_type', 'success'); // gọi hàm setSession bên session
+        }else{
+            setSessionFlash('msg', 'Đăng ký không thành công , vui lòng thử lại sau.'); // gọi hàm setSession bên session, lưu giá trị cũ
+            setSessionFlash('msg_type', 'danger'); // gọi hàm setSession bên session
+        }
+    }else{
+        setSessionFlash('msg', 'vui lòng kiểm tra dữ liệu nhập vào.'); // gọi hàm setSession bên session, lưu giá trị cũ
+        setSessionFlash('msg_type', 'danger'); // gọi hàm setSession bên session
+
+        setSessionFlash('oldData', $filter); // gọi hàm setSession bên session, lưu giá trị cũ
+        setSessionFlash('error', $err); // gọi hàm setSession bên session
+
     }
+
+    $msg = getSessionFlash('msg');
+    $msg_type = getSessionFlash('msg_type');
+    $oldData = getSessionFlash('oldData'); // lấy giá trị cũ ng dùng nhập
+    $errorArray = getSessionFlash('error'); 
 }
 ?>
 
@@ -80,46 +122,85 @@ if (isPost()) {
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-9 col-lg-6 col-xl-5">
                 <img src="<?php echo _HOST_URL_TEMPLATES; ?>/assets/image/draw2.webp" class="img-fluid"
-                    alt="Sample image">
+                alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+
+                <?php 
+                if(!empty($msg) && !empty($msg_type)){
+                    getMsg($msg, $msg_type);
+                }
+                ?>
+
                 <form method="POST" action="" enctype="multipart/form-data">
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <h2 class="fw-normal mb-4 me-3">Đăng ký tài khoản</h2>
-
                     </div>
-
-
+                    
+                    
                     <!-- input tên, email, phone, mật khẩu, nhập lại mật khẩu-->
-
+                    
                     <!--họ tên-->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input name="fullname" type="text" class="form-control form-control-lg"
-                            placeholder="Họ tên của bạn" />
+                        <input name="fullname" type="text" value="<?php  
+                        if(!empty($oldData)){
+                            echo oldData($oldData, 'fullname');
+                        }
+                        ?>" class="form-control form-control-lg"
+                        placeholder="Họ tên của bạn" />
+                        <?php 
+                            if(!empty($errorArray)){
+                                echo formErr($errorArray, 'fullname');
+                            }
+                        ?>
                     </div>
 
                     <!--email-->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input name="email" type="text" class="form-control form-control-lg"
+                        <input name="email" type="text" value="<?php 
+                            if(!empty($errorArray)){
+                                echo oldData($oldData, 'email'); 
+                            }
+                        ?>" class="form-control form-control-lg"
                             placeholder="Nhập địa chỉ email" />
+                        <?php 
+                            if(!empty($errorArray)){
+                                echo formErr($errorArray, 'email');
+                            }
+                        ?>
                     </div>
 
                     <!--số điện thoại-->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input name="phone" type="text" class="form-control form-control-lg"
+                        <input name="phone" type="text" value="<?php 
+                        if(!empty($errorArray)){
+                            echo oldData($oldData, 'phone'); 
+                        }
+                        ?>" class="form-control form-control-lg"
                             placeholder="Nhập số điện thoại" />
+                        <?php 
+                            if(!empty($errorArray)){
+                                echo formErr($errorArray, 'phone');
+                            }
+                        ?>
                     </div>
 
                     <!--password mật khẩu-->
                     <div data-mdb-input-init class="form-outline mb-4">
                         <input name="password" type="password" id="form3Example4" class="form-control form-control-lg"
                             placeholder="Nhập mật khẩu" />
+                        <?php if(!empty($errorArray)){
+                            echo formErr($errorArray, 'password');
+                        } ?> 
                     </div>
 
-                    <!--password mật khẩu-->
+                    <!-- confirm password mật khẩu-->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input name="confirm-pass" type="password" class="form-control form-control-lg"
+                        <input name="confirm_pass" type="password" class="form-control form-control-lg"
                             placeholder="Nhập lại mật khẩu" />
+                        <?php if(!empty($errorArray)){
+                            echo formErr($errorArray, 'confirm_pass');
+                        } ?> 
                     </div>
 
 
