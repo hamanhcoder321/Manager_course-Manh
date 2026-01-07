@@ -197,3 +197,21 @@ function formErr($err, $fieldName){
 function oldData($oldData, $fieldName) {
     return !empty($oldData[$fieldName]) ? $oldData[$fieldName] : null;
 }
+
+
+
+// hàm chuyển hướng: path đầy đủ và path ko đầy đủ
+/*
+- vd: redirect('http://localhost/manager_course/?module=auth&action=login', true)
+- redirect('?module=auth&action=login)
+*/
+function redirect($path, $pathFull = false) { // 2 tham số path 
+    if($pathFull) {
+        header("Location: $path"); // path ko nối domain, truy cập theo url 
+        exit();
+    }else{
+        $url = _HOST_URL . $path; // path nối domain truy cập theo url thiết lập
+        header("Location: $url");
+        exit();
+    }
+}

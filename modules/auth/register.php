@@ -194,7 +194,7 @@ if (isPost()) {
                         } ?> 
                     </div>
 
-                    <!-- confirm password mật khẩu-->
+                    <!-- confirm password-->
                     <div data-mdb-input-init class="form-outline mb-4">
                         <input name="confirm_pass" type="password" class="form-control form-control-lg"
                             placeholder="Nhập lại mật khẩu" />
