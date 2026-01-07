@@ -11,7 +11,12 @@ Layout('header-auth', $data);
 - validate dlieu nhập vào
 - check dlieu vs csdl (email, pass)
 - dlieu khớp --> tokenlogin --> insert vào bảng token_login
++ ktra đăng nhập:
+    - gán token_login lên session
+    - trong header --> lấy token từ session so sánh khớp vs token trong bảng token_login 
+    - nếu khớp thì điều hướng trang dashboard --> ko khớp về login
 - điều hướng dashboard
+- đăng nhập tài khoản ở 1 nơi tại 1 thời điểm.
 */
 
 
@@ -26,7 +31,7 @@ if (isPost()) {
     } else {
         if (!validateEmail($filter['email'])) { // gọi lại hàm validateEmail ở bên fuc.php 
             $err['email']['isEmail'] = 'email không đúng định dạng';
-        } 
+        }
     }
 
     // validate pass
@@ -38,7 +43,7 @@ if (isPost()) {
         }
     }
 
-    if(empty($err)){
+    if (empty($err)) {
         // ktra dlieu
         $email = $filter['email'];
         $password = $filter['password'];
@@ -46,37 +51,50 @@ if (isPost()) {
         //ktra email
         $checkEmail = getOne("SELECT * FROM users WHERE email = '$email' ");
 
-        if(!empty($checkEmail)){
-            if(!empty($password)) {
+        if (!empty($checkEmail)) {
+            if (!empty($password)) {
                 $checkStatus = password_verify($password, $checkEmail['password']);
-                
-                if($checkStatus) {
-                    // tạo token và insert và bảng token_login
-                    $token = sha1(uniqid() . time());
-                    $data  = [
-                        'token' => $token,
-                        'created_at' => date('Y:m:d H:i:s'),
-                        'user_id' => $checkEmail['id'] // user_id theo biến checkEmail khớp vs thông tin id
-                    ];
-                    $insetToken = insert('token_login', $data);
-                    // nếu insert thành công
-                    if($insetToken){
-                        setSessionFlash('msg', 'Đăng nhập thành công'); // gọi hàm setSession bên session, lưu giá trị cũ
-                        setSessionFlash('msg_type', 'success'); // gọi hàm setSession bên session
-                        redirect('/'); // hàm ở fuc.php
-                    }else{
-                        setSessionFlash('msg', 'Đăng nhập không thành công'); // gọi hàm setSession bên session, lưu giá trị cũ
+
+                if ($checkStatus) {
+                    // tài khoản login 1 nơi, nghĩa là có token roi thì đăng nhập lại ko cho phép
+                    $user_id = $checkEmail['id'];
+                    $checkAlready = getRows("SELECT * FROM token_login WHERE user_id = $user_id ");
+                    if ($checkAlready > 0) { // trả về dlieu lớn hơn 0 nghĩa là có token đăng nhập roi
+                        setSessionFlash('msg', 'Tài khoản đang được đăng nhập ở 1 nơi khác, vui lòng thử lại sau!'); // gọi hàm setSession bên session, lưu giá trị cũ
                         setSessionFlash('msg_type', 'danger'); // gọi hàm setSession bên session
+                        redirect('?module=auth&action=login');
+                    } else {
+                        // tạo token và insert và bảng token_login
+                        $token = sha1(uniqid() . time());
+
+                        // gán token lên session
+                        setSessionFlash('token_login', $token);
+
+                        $data = [
+                            'token' => $token,
+                            'created_at' => date('Y:m:d H:i:s'),
+                            'user_id' => $checkEmail['id'] // user_id theo biến checkEmail khớp vs thông tin id
+                        ];
+                        $insetToken = insert('token_login', $data);
+                        // nếu insert thành công
+                        if ($insetToken) {
+                            setSessionFlash('msg', 'Đăng nhập thành công'); // gọi hàm setSession bên session, lưu giá trị cũ
+                            setSessionFlash('msg_type', 'success'); // gọi hàm setSession bên session
+                            redirect('/'); // hàm ở fuc.php
+                        } else {
+                            setSessionFlash('msg', 'Đăng nhập không thành công'); // gọi hàm setSession bên session, lưu giá trị cũ
+                            setSessionFlash('msg_type', 'danger'); // gọi hàm setSession bên session
+                        }
                     }
-                }else{
+                } else {
                     setSessionFlash('msg', 'vui lòng kiểm tra dữ liệu nhập vào.'); // gọi hàm setSession bên session, lưu giá trị cũ
                     setSessionFlash('msg_type', 'danger'); // gọi hàm setSession bên session
                 }
             }
         }
 
-        
-    }else{
+
+    } else {
         setSessionFlash('msg', 'vui lòng kiểm tra dữ liệu nhập vào.'); // gọi hàm setSession bên session, lưu giá trị cũ
         setSessionFlash('msg_type', 'danger'); // gọi hàm setSession bên session
 
@@ -89,7 +107,7 @@ if (isPost()) {
 $msg = getSessionFlash('msg');
 $msg_type = getSessionFlash('msg_type');
 $oldData = getSessionFlash('oldData'); // lấy giá trị cũ ng dùng nhập
-$errorArray = getSessionFlash('error'); 
+$errorArray = getSessionFlash('error');
 
 ?>
 
@@ -97,32 +115,31 @@ $errorArray = getSessionFlash('error');
     <div class="container-fluid h-custom">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-9 col-lg-6 col-xl-5">
-                <img src="<?php echo _HOST_URL_TEMPLATES; ?>/assets/image/draw2.webp"
-                    class="img-fluid" alt="Sample image">
+                <img src="<?php echo _HOST_URL_TEMPLATES; ?>/assets/image/draw2.webp" class="img-fluid"
+                    alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <?php 
-                if(!empty($msg) && !empty($msg_type)){
+                <?php
+                if (!empty($msg) && !empty($msg_type)) {
                     getMsg($msg, $msg_type);
                 }
                 ?>
                 <form method="POST" action="" enctype="multipart/form-data">
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <h2 class="fw-normal mb-4 me-3">Đăng nhập hệ thống</h2>
-                        
+
                     </div>
 
 
                     <!-- Email input -->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input type="text" name="email" id="form3Example3" value="<?php 
-                            if(!empty($errorArray)){
-                                echo oldData($oldData, 'email'); 
-                            }
-                        ?>" class="form-control form-control-lg"
-                            placeholder="Nhập địa chỉ email" />
-                        <?php 
-                        if(!empty($errorArray)){
+                        <input type="text" name="email" id="form3Example3" value="<?php
+                        if (!empty($errorArray)) {
+                            echo oldData($oldData, 'email');
+                        }
+                        ?>" class="form-control form-control-lg" placeholder="Nhập địa chỉ email" />
+                        <?php
+                        if (!empty($errorArray)) {
                             echo formErr($errorArray, 'email');
                         }
                         ?>
@@ -132,23 +149,25 @@ $errorArray = getSessionFlash('error');
                     <div data-mdb-input-init class="form-outline mb-3">
                         <input type="password" name="password" id="form3Example4" class="form-control form-control-lg"
                             placeholder="Nhập mật khẩu của bạn" />
-                        <?php 
-                        if(!empty($errorArray)){
+                        <?php
+                        if (!empty($errorArray)) {
                             echo formErr($errorArray, 'password');
-                        } 
-                        ?> 
+                        }
+                        ?>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center">
-                        
-                        <a href="<?php echo _HOST_URL; ?>?module=auth&action=forgot" class="text-body">Quên mật khẩu?</a>
+
+                        <a href="<?php echo _HOST_URL; ?>?module=auth&action=forgot" class="text-body">Quên mật
+                            khẩu?</a>
                     </div>
 
                     <div class="text-center text-lg-start mt-4 pt-2">
                         <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg"
                             style="padding-left: 2.5rem; padding-right: 2.5rem;">Đăng nhập</button>
-                        <p class="small fw-bold mt-2 pt-1 mb-0">Bạn chưa có tài khoản? <a href="<?php echo _HOST_URL; ?>?module=auth&action=register"
-                                class="link-danger">Đăng ký ngay</p>
+                        <p class="small fw-bold mt-2 pt-1 mb-0">Bạn chưa có tài khoản? <a
+                                href="<?php echo _HOST_URL; ?>?module=auth&action=register" class="link-danger">Đăng ký
+                                ngay</p>
                     </div>
 
                 </form>

@@ -2,6 +2,11 @@
 if (!defined('_Manh')) {
     echo 'truy cập ko hợp lệ';
 }
+
+if(!isLogin()){
+    redirect('?module=auth&action=login');
+}
+
 ?>
 
 <!doctype html>
