@@ -232,7 +232,7 @@ function redirect($path, $pathFull = false)
 function isLogin()
 {
     $checkToken = false; // ban đầu là false
-    $tokenLogin = getSessionFlash('token_login');
+    $tokenLogin = getSession('token_login');
     $checkToken = getOne("SELECT * FROM token_login WHERE token = '$tokenLogin' ");
     if (!empty($checkToken)) { // nếu khớp token thì true
         $checkToken = true;

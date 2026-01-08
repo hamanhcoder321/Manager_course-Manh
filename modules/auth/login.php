@@ -68,7 +68,7 @@ if (isPost()) {
                         $token = sha1(uniqid() . time());
 
                         // gán token lên session
-                        setSessionFlash('token_login', $token);
+                        setSession('token_login', $token);
 
                         $data = [
                             'token' => $token,
@@ -78,8 +78,6 @@ if (isPost()) {
                         $insetToken = insert('token_login', $data);
                         // nếu insert thành công
                         if ($insetToken) {
-                            setSessionFlash('msg', 'Đăng nhập thành công'); // gọi hàm setSession bên session, lưu giá trị cũ
-                            setSessionFlash('msg_type', 'success'); // gọi hàm setSession bên session
                             redirect('/'); // hàm ở fuc.php
                         } else {
                             setSessionFlash('msg', 'Đăng nhập không thành công'); // gọi hàm setSession bên session, lưu giá trị cũ

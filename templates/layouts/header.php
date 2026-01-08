@@ -102,7 +102,7 @@ if(!isLogin()){
                             </li>
                             <!--begin::Menu Footer-->
                             <li class="user-footer">
-                                <a href="#" style="width: 100%;" class="btn btn-default btn-flat float-end">Sign out</a>
+                                <a href="?module=auth&action=logout" style="width: 100%;" class="btn btn-default btn-flat float-end">Đăng xuất tài khoản</a>
                             </li>
                             <!--end::Menu Footer-->
                         </ul>

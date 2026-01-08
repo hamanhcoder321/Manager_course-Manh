@@ -98,7 +98,9 @@ function update($table, $data, $condition = ''){ // condition điều kiện c
     $tmp = $conn -> prepare($sql);
 
     // thực thi sql
-    $tmp -> execute($data);
+    $rel = $tmp -> execute($data);
+    
+    return $rel;
 
 } 
 
@@ -111,7 +113,9 @@ function delete($table, $condition = '') {
         $sql = "DELETE FROM $table";
     }
     $stm = $conn -> prepare($sql);
-    $stm -> execute();
+    $rel = $stm -> execute();
+    
+    return $rel;
 }
 
 // hàm getlastid lấy id dlieu mới id insert
