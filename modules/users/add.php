@@ -4,7 +4,7 @@ if (!defined('_Manh')) {
 }
 
 $data = [
-    'title' => 'Danh sách tài khoản'
+    'title' => 'Thêm tài khoản người dùng'
 ];
 Layout('header', $data);
 Layout('sidebar');

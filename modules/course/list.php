@@ -52,7 +52,7 @@ if (isGet()) { // xảy ra phương thức get
 
 // xử lý phân trang
 $maxData = getRows("SELECT id FROM course"); // tổng dlieu bảng course
-$perPage = 1; // số dòng dlieu 1 trang
+$perPage = 4; // số dòng dlieu 1 trang
 $maxPage = ceil($maxData / $perPage); // hàm chia số trang
 
 
