@@ -62,7 +62,7 @@ if (isPost()) {
     }
 
     if (empty($err)) {
-        $data = [
+        $dataInsert = [
             'fullname' => $filter['fullname'],
             'email'    => $filter['email'],
             'phone'    => $filter['phone'],
@@ -73,8 +73,10 @@ if (isPost()) {
             'address'  => (!empty($filter['address']) ? $filter['address'] : null),
             'created_at' =>  date('Y:m:d H:i:s')
         ];
-        $insertStatus = insert('users', $data);
-        if($insertStatus) { // nếu thêm thành công báo
+        
+        $insertStatus = insert('users', $dataInsert);
+
+        if($dataInsert) { // nếu thêm thành công báo
             setSessionFlash('msg', 'Thêm tài khoản thành công');
             setSessionFlash('msg_type', 'success');
             redirect('?module=users&action=list');

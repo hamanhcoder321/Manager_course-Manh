@@ -43,19 +43,23 @@ if (isPost()) {
         }
     }
 
-    // validate email
-    if (empty(trim($filter['email']))) {
-        $err['email']['required'] = 'email không để trống';
-    } else {
-        if (!validateEmail($filter['email'])) { // gọi lại hàm validateEmail ở bên fuc.php 
-            $err['email']['isEmail'] = 'email không đúng định dạng';
-        } else {
-            $email = $filter['email']; // gán lai cho biến $email
 
-            // ktra email có tồn tại trong users ko, dùng hàm getRows đếm ktra dòng email trong db 
-            $checkEmail = getRows("SELECT * FROM users WHERE email = '$email' ");
-            if ($checkEmail > 0) {
-                $err['email']['check'] = 'email đã tồn tại';
+    // email thu đc ở filter nó mà khác vs cái email db $deltailUser thì validate nó
+    if($filter['email'] != $detailUser['email']){
+        // validate email
+        if (empty(trim($filter['email']))) {
+            $err['email']['required'] = 'email không để trống';
+        } else {
+            if (!validateEmail($filter['email'])) { // gọi lại hàm validateEmail ở bên fuc.php 
+                $err['email']['isEmail'] = 'email không đúng định dạng';
+            } else {
+                $email = $filter['email']; // gán lai cho biến $email
+    
+                // ktra email có tồn tại trong users ko, dùng hàm getRows đếm ktra dòng email trong db 
+                $checkEmail = getRows("SELECT * FROM users WHERE email = '$email' ");
+                if ($checkEmail > 0) {
+                    $err['email']['check'] = 'email đã tồn tại';
+                }
             }
         }
     }
@@ -69,30 +73,36 @@ if (isPost()) {
         }
     }
 
+
     // validate pass
-    if (empty(trim($filter['password']))) {
-        $err['password']['required'] = 'mật khẩu không bỏ trống';
-    } else {
+    if (!empty(trim($filter['password']))) { // nghĩa là password có dlieu sẽ validate cho ô pass
         if (strlen(trim($filter['password'])) < 6) {
             $err['password']['isPass'] = 'mật khẩu phải lớn 6';
         }
-    }
+    } 
 
     if (empty($err)) {
-        $data = [
+        $dataUpdate = [ // ở đây lưu ý data này ko cập nhật pass nếu người dùng ko sửa pass
             'fullname' => $filter['fullname'],
             'email'    => $filter['email'],
             'phone'    => $filter['phone'],
             'group_id'    => $filter['group_id'],
-            'password' => password_hash($filter['password'], PASSWORD_DEFAULT), // mã hóa mk
             'status'   => $filter['status'],
-            'avartar'  => '/templates/uploads/imges_no',
             'address'  => (!empty($filter['address']) ? $filter['address'] : null),
-            'created_at' =>  date('Y:m:d H:i:s')
+            'updated_at' =>  date('Y:m:d H:i:s')
         ];
-        $insertStatus = insert('users', $data);
-        if($insertStatus) { // nếu thêm thành công báo
-            setSessionFlash('msg', 'Thêm tài khoản thành công');
+
+
+        if(!empty($filter['password']) ){ // nếu người dùng thay đổi mk thì mã hóa nó
+            $dataUpdate['password'] = password_hash($filter['password'], PASSWORD_DEFAULT); // mã hóa mk
+        }
+
+        $condition = "id=". $user_id; // upadete the id
+        $updateStatus = update('users', $dataUpdate, $condition);
+
+
+        if($updateStatus) { // nếu sửa thành công báo
+            setSessionFlash('msg', 'Sửa tài khoản thành công');
             setSessionFlash('msg_type', 'success');
             redirect('?module=users&action=list');
         }else{
