@@ -15592,4 +15592,9 @@ fieldset legend {
   margin-top: 20px;
 }
 
+.error{
+  padding: 2px;
+  font-style: italic;
+  color: red;
+}
 /*# sourceMappingURL=adminlte.css.map */
