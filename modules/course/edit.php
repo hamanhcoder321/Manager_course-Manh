@@ -79,7 +79,7 @@ if (isPost()) {
 
             // xử lý lấy file đã tạo vào uploads
             $checkMove = move_uploaded_file($_FILES['thumbnail']['tmp_name'], $targetFile);
-
+            $targetFile = ltrim($targetFile, '.' );
             if ($checkMove) {
                 $thumb = $targetFile;
             }
@@ -189,7 +189,7 @@ $errorArray = getSessionFlash('error');
                             <input id="thumbnail" name="thumbnail" type="file" class="form-control"
                                 placeholder="nhập địa chỉ">
                             <img width="200px" id="previewImage" class="preview-image p-3"
-                                src="<?php echo !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : false; ?>"
+                                src="<?php echo _HOST_URL; ?><?php echo !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : false; ?>"
                                 alt="">
                         </div>
                         <div class="col-3 pb-3">

@@ -3,8 +3,22 @@ if (!defined('_Manh')) {
     echo 'truy cập ko hợp lệ';
 }
 
-if(!isLogin()){
+if (!isLogin()) {
     redirect('?module=auth&action=login');
+}
+
+// lấy thông tin user
+$token = getSession('token_login'); // lấy token
+if (!empty($token)) {
+    $checkTokenLogin = getOne("SELECT * FROM token_login WHERE token='$token'");
+    if (!empty($checkTokenLogin)) {
+        $user_id = $checkTokenLogin['user_id']; // lấy id user
+        $getUserDetail = getOne("SELECT fullname, avartar FROM users WHERE id=$user_id"); // lấy tên và ảnh ở bảng users
+        if (!empty($getUserDetail)) {
+            $nameUser = $getUserDetail['fullname'];
+            $avartarUser = $getUserDetail['avartar'];
+        }
+    }
 }
 
 ?>
@@ -69,9 +83,9 @@ if(!isLogin()){
         <nav class="app-header navbar navbar-expand bg-body">
             <!--begin::Container-->
             <div class="container-fluid">
-              
+
                 <ul class="navbar-nav ms-auto">
-                    
+
                     <!--begin::Fullscreen Toggle-->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
@@ -83,27 +97,28 @@ if(!isLogin()){
                     <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="./assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow"
-                                alt="User Image" />
-                            <span class="d-none d-md-inline">Alexander Pierce</span>
+                            <img src="<?php echo _HOST_URL; ?><?php echo isset($avartarUser) ? $avartarUser : false; ?>"
+                                class="user-image rounded-circle shadow" alt="User Image" />
+                            <span class="d-none d-md-inline"><?php echo isset($nameUser) ? $nameUser : false; ?></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
                             <li class="user-header text-bg-primary">
-                                <img src="./assets/img/user2-160x160.jpg" class="rounded-circle shadow"
-                                    alt="User Image" />
+                                <img src="<?php echo _HOST_URL; ?><?php echo isset($avartarUser) ? $avartarUser : false; ?>"
+                                    class="rounded-circle shadow" alt="User Image" />
                                 <p>
-                                    Alexander Pierce - Web Developer
+                                    <?php echo isset($nameUser) ? $nameUser : false; ?> - Web Developer
                                     <small>Member since Nov. 2023</small>
                                 </p>
                             </li>
                             <!--end::User Image-->
                             <li class="user-footer">
-                                <a href="#" style="width: 100%;" class="btn btn-default btn-flat">Profile</a>
+                                <a href="?module=users&action=profile" style="width: 100%;" class="btn btn-default btn-flat">Profile</a>
                             </li>
                             <!--begin::Menu Footer-->
                             <li class="user-footer">
-                                <a href="?module=auth&action=logout" style="width: 100%;" class="btn btn-default btn-flat float-end">Đăng xuất tài khoản</a>
+                                <a href="?module=auth&action=logout" style="width: 100%;"
+                                    class="btn btn-default btn-flat float-end">Đăng xuất tài khoản</a>
                             </li>
                             <!--end::Menu Footer-->
                         </ul>

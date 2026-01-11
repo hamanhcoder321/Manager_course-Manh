@@ -134,42 +134,45 @@ $msg_type = getSessionFlash('msg_type');
                             Thêm mới
                             khóa học</a>
                     </div>
-                    <table class="table table-bordered text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">STT</th>
-                                <th scope="col">Tên khóa học</th>
-                                <th scope="col">Thumbnail</th>
-                                <th scope="col">Giá</th>
-                                <th scope="col">Lĩnh vực</th>
-                                <th scope="col">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!--duyệt mảng-->
-                            <?php
-                            // duyệt và lấy dlieu mảng con item
-                            foreach ($getDetailUser as $key => $item): // key là id, item dlieu
-                                ?>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead>
                                 <tr>
-                                    <!--key+1 vì key bắt đầu số 0 nên + 1 đơn vị lấy 1-->
-                                    <th scope="row"><?php echo $key + 1; ?></th>
-                                    <td><?php echo $item['name']; ?></td>
-                                    <td><img style="width: 50px" src="<?php echo $item['thumbnail']; ?>" alt=""></td>
-                                    <td><?php echo $item['price']; ?></td>
-                                    <td><?php echo $item['name_cate']; ?></td>
-                                    <td><a href="?module=course&action=edit&id=<?php echo $item['id']; ?>"
-                                            class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="?module=course&action=delete&id=<?php echo $item['id']; ?>"
-                                            onclick="return confirm('bạn chắc chắn muốn xóa không?')"
-                                            class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                                    </td>
+                                    <th scope="col">STT</th>
+                                    <th scope="col">Tên khóa học</th>
+                                    <th scope="col">Thumbnail</th>
+                                    <th scope="col">Giá</th>
+                                    <th scope="col">Lĩnh vực</th>
+                                    <th scope="col">Thao tác</th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                <!--duyệt mảng-->
                                 <?php
-                            endforeach;
-                            ?>
-                        </tbody>
-                    </table>
+                                // duyệt và lấy dlieu mảng con item
+                                foreach ($getDetailUser as $key => $item): // key là id, item dlieu
+                                    ?>
+                                    <tr>
+                                        <!--key+1 vì key bắt đầu số 0 nên + 1 đơn vị lấy 1-->
+                                        <th scope="row"><?php echo $key + 1; ?></th>
+                                        <td><?php echo $item['name']; ?></td>
+                                        <td><img style="width: 50px" src="<?php echo _HOST_URL; ?><?php echo $item['thumbnail']; ?>" alt=""></td>
+                                        <td><?php echo $item['price']; ?></td>
+                                        <td><?php echo $item['name_cate']; ?></td>
+                                        <td><a href="?module=course&action=edit&id=<?php echo $item['id']; ?>"
+                                                class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a>
+                                            <a href="?module=course&action=delete&id=<?php echo $item['id']; ?>"
+                                                onclick="return confirm('bạn chắc chắn muốn xóa không?')"
+                                                class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                endforeach;
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <!--xử lý phân trang trước nếu 1 ẩn nút còn ở 2 trở đi hiện-->

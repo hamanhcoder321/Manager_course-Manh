@@ -61,6 +61,7 @@ if (isPost()) {
         $thumb = '';
         // xử lý lấy file đã tạo vào uploads
         $checkMove = move_uploaded_file($_FILES['thumbnail']['tmp_name'], $targetFile);
+        $targetFile = ltrim($targetFile, '.' );
         if ($checkMove) {
             $thumb = $targetFile;
         }

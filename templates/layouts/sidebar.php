@@ -37,6 +37,31 @@ if (!defined('_Manh')) {
                 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-clipboard-fill"></i>
+                        <p>
+                            Quản lý tài khoản
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="?module=users&action=list" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Danh sách tài khoản</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="?module=users&action=add" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Tạo mới tài khoản</p>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-box-seam-fill"></i>
                         <p>
                             Khóa học
@@ -64,30 +89,7 @@ if (!defined('_Manh')) {
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-clipboard-fill"></i>
-                        <p>
-                            Quản lý tài khoản
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="?module=users&action=list" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Danh sách tài khoản</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="?module=users&action=add" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Tạo mới tài khoản</p>
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </li>
+                
                 
                 <li class="nav-item">
                     <a href="#" class="nav-link">

@@ -141,7 +141,8 @@ $msg_type = getSessionFlash('msg_type');
                             Thêm mới
                             tài khoản</a>
                     </div>
-                    <table class="table table-bordered text-center">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
                         <thead>
                             <tr>
                                 <th scope="col">STT</th>
@@ -180,6 +181,7 @@ $msg_type = getSessionFlash('msg_type');
                             ?>
                         </tbody>
                     </table>
+                    </div>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <!--xử lý phân trang trước nếu 1 ẩn nút còn ở 2 trở đi hiện-->
