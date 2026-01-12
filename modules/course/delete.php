@@ -12,12 +12,12 @@ if(!empty($filter)){ // filter này có giá trị ko rỗng
         if($deleteStatus){
             setSessionFlash('msg', 'xóa khóa học thành công.');
             setSessionFlash('msg_type', 'success');
-            redirect('?module=course_category&action=list');
+            redirect('?module=course&action=list');
         }
     }else{
         setSessionFlash('msg', 'khóa học không tồn tại.');
         setSessionFlash('msg_type', 'danger');
-        redirect('?module=course_category&action=list');
+        redirect('?module=course&action=list');
     }
 }else{
     setSessionFlash('msg', 'Đã có lỗi xảy ra, vui lòng thử lại sau.');

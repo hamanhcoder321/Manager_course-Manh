@@ -101,7 +101,7 @@ if (!defined('_Manh')) {
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="?module=student" class="nav-link">
+                            <a href="?module=students" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Danh sách</p>
                             </a>
