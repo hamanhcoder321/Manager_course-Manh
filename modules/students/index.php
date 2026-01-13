@@ -6,7 +6,7 @@ $data = [
     'title' => 'Danh sách học viên'
 ];
 Layout('header', $data);
-// Layout('sidebar');
+Layout('sidebar');
 
 /*
 -  trước tiên lấy dlieu users phải đổi json sang mảng 
@@ -15,21 +15,21 @@ Layout('header', $data);
 $filter = filterData();
 
 $keyword = '';
-if(isGet()){
-    
-}
-
-$permissionArr = [];
-$userDetail = getAll("SELECT fullname, email, permission FROM users");
-if(!empty($userDetail)){
-    foreach($userDetail as $key => $item){
-        $permissionJson = json_decode($item['permission'], true);
-        $permissionArr[$key] = $permissionJson;
+if (isGet()) { // pthuc get xảy ra
+    if (isset($filter['keyword'])) { // nếu keyword tồn tại
+        $keyword = $filter['keyword']; // gán filter[keyword] vào $keyword
     }
 }
-echo '<pre>';
-print_r($permissionArr);
-echo '</pre>';
+
+$permissionArr = []; // tổng hợp mảng pquyen
+$userDetail = getAll("SELECT fullname, email, permission FROM users"); // lấy thông tin tk user
+if (!empty($userDetail)) {
+    foreach ($userDetail as $key => $item) {
+        $permissionJson = json_decode($item['permission'], true);
+        $permissionArr[$key] = $permissionJson; // sau khi lấy giá trị cho lưu vào $permissionArr
+    }
+}
+
 ?>
 
 <main class="app-main">
@@ -46,7 +46,7 @@ echo '</pre>';
                                 $getCourseDetail = getAll("SELECT id, name FROM course");
                                 foreach ($getCourseDetail as $item):
                                     ?>
-                                    <option value="<?php echo $item['id']; ?>"><?php echo $item['name']; ?></option>
+                                    <option value="<?php echo $item['id']; ?>" <?php if($keyword == $item['id']) {echo 'selected';} ?>><?php echo $item['name']; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -67,14 +67,22 @@ echo '</pre>';
                             </thead>
                             <tbody>
                                 <?php
-
-                                ?>
-                                <tr>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                </tr>
-                                <?php
+                                $dem = 0;
+                                // ktra keyword id nằm trong persion ko từng tk nếu có permission thì ktra lấy id đó in ra thông tin tk đó
+                                foreach ($permissionArr as $key => $item):
+                                    if (!empty($item)): // ktra item có rỗng ko
+                                        if (in_array($keyword, $item)):
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $dem+1;
+                                                $dem++; ?></td> <!--số thứ tự-->
+                                                <td><?php echo $userDetail[$key]['fullname'] ?></td> <!--tên học viên-->
+                                                <td><?php echo $userDetail[$key]['email'] ?></td>
+                                            </tr>
+                                            <?php
+                                        endif;
+                                    endif;
+                                endforeach;
                                 ?>
                             </tbody>
                         </table>
