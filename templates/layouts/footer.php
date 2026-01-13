@@ -32,6 +32,36 @@ if (!defined('_Manh')) {
 <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
 <script src="<?php echo _HOST_URL_TEMPLATES; ?>/assets/js/adminlte.js"></script>
 <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+
+<script>
+    const toggleBtn = document.getElementById('themeToggle');
+    const iconDark = document.getElementById('iconDark');
+    const iconLight = document.getElementById('iconLight');
+
+    // lấy theme đã lưu
+    let theme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-bs-theme', theme);
+    updateIcon(theme);
+
+    toggleBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        theme = theme === 'light' ? 'dark' : 'light';
+        document.body.setAttribute('data-bs-theme', theme);
+        localStorage.setItem('theme', theme);
+        updateIcon(theme);
+    });
+
+    function updateIcon(theme) {
+        if (theme === 'dark') {
+            iconDark.classList.add('d-none');
+            iconLight.classList.remove('d-none');
+        } else {
+            iconDark.classList.remove('d-none');
+            iconLight.classList.add('d-none');
+        }
+    }
+</script>
+
 <script>
     const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
     const Default = {
