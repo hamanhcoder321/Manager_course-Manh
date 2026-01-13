@@ -99,7 +99,7 @@ $msg_type = getSessionFlash('msg_type');
                         }
                         ?>
                         <form action="" method="get">
-                            <input type="hidden" name="module" value="course_category">
+                            <input type="hidden" name="module" value="course">
                             <input type="hidden" name="action" value="list">
                             <div class="row mb-3">
                                 <div class="col-3 form-group">
