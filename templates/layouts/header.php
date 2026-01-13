@@ -89,8 +89,8 @@ if (!empty($token)) {
                     <!--begin::Fullscreen Toggle-->
                     <li class="nav-item">
                         <a class="nav-link" href="#" id="themeToggle">
-                            <i class="bi bi-moon-fill" id="iconDark"></i>
-                            <i class="bi bi-sun-fill d-none" id="iconLight"></i>
+                            <i class="bi bi-moon-fill" id="iconDark">DarkMode</i>
+                            <i class="bi bi-sun-fill d-none" id="iconLight">Light Mode</i>
                         </a>
                     </li>
 

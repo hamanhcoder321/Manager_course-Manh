@@ -2,6 +2,8 @@
 if (!defined('_Manh')) {
     echo 'truy cập ko hợp lệ';
 }
+$currentModule = $_GET['module'] ?? '';
+$currentAction = $_GET['action'] ?? '';
 ?>
 <!--begin::Sidebar-->
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -25,90 +27,110 @@ if (!defined('_Manh')) {
             <!--begin::Sidebar Menu-->
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation"
                 aria-label="Main navigation" data-accordion="false" id="navigation">
-                <li class="nav-item menu-open">
-                    <a href="<?php echo _HOST_URL ?>" class="nav-link active">
-                        <i class="nav-icon bi bi-speedometer"></i>
-                        <p>
-                            Dashboard
-                        </p>
-                    </a>
-                    
-                </li>
-                
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="<?php echo _HOST_URL ?>"
+                        class="nav-link <?php echo $currentModule == '' ? 'active' : ''; ?>">
+                        <i class="nav-icon bi bi-speedometer"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+
+                <?php
+                $userMenuOpen = ($currentModule == 'users');
+                ?>
+
+                <li class="nav-item <?php echo $userMenuOpen ? 'menu-open' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo $userMenuOpen ? 'active' : ''; ?>">
                         <i class="nav-icon bi bi-clipboard-fill"></i>
                         <p>
                             Quản lý tài khoản
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
+
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="?module=users&action=list" class="nav-link">
+                            <a href="?module=users&action=list"
+                                class="nav-link <?php echo ($currentModule == 'users' && $currentAction == 'list') ? 'active' : ''; ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Danh sách tài khoản</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a href="?module=users&action=add" class="nav-link">
+                            <a href="?module=users&action=add"
+                                class="nav-link <?php echo ($currentModule == 'users' && $currentAction == 'add') ? 'active' : ''; ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Tạo mới tài khoản</p>
                             </a>
                         </li>
-                        
                     </ul>
                 </li>
-                
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+
+                <?php
+                $courseMenuOpen = in_array($currentModule, ['course', 'course_category']);
+                ?>
+
+                <li class="nav-item <?php echo $courseMenuOpen ? 'menu-open' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo $courseMenuOpen ? 'active' : ''; ?>">
                         <i class="nav-icon bi bi-box-seam-fill"></i>
                         <p>
                             Khóa học
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
+
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="?module=course&action=list" class="nav-link">
+                            <a href="?module=course&action=list"
+                                class="nav-link <?php echo ($currentModule == 'course' && $currentAction == 'list') ? 'active' : ''; ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Danh sách</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a href="?module=course&action=add" class="nav-link">
+                            <a href="?module=course&action=add"
+                                class="nav-link <?php echo ($currentModule == 'course' && $currentAction == 'add') ? 'active' : ''; ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Thêm mới</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a href="?module=course_category&action=list" class="nav-link">
+                            <a href="?module=course_category&action=list"
+                                class="nav-link <?php echo ($currentModule == 'course_category') ? 'active' : ''; ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Lĩnh vực</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                
-                
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+
+
+                <?php
+                $studentMenuOpen = in_array($currentModule, ['student', 'students']);
+                ?>
+
+                <li class="nav-item <?php echo $studentMenuOpen ? 'menu-open' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo $studentMenuOpen ? 'active' : ''; ?>">
                         <i class="nav-icon bi bi-pencil-square"></i>
                         <p>
                             Học viên
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
+
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="?module=students" class="nav-link">
+                            <a href="?module=students"
+                                class="nav-link <?php echo ($currentModule == 'students') ? 'active' : ''; ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Danh sách</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                
             </ul>
             <!--end::Sidebar Menu-->
         </nav>
