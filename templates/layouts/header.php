@@ -63,7 +63,13 @@ if (!empty($token)) {
         crossorigin="anonymous" />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
+
+
+    <!--ở link css này khi đẩy lên hosting thì phải thêm templates ở sau assets-->
     <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES; ?>/assets/css/adminlte.css" />
+
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->

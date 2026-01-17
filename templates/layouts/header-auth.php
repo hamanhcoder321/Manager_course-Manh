@@ -44,6 +44,8 @@ if (!defined('_Manh')) {
     <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES; ?>/assets/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES; ?>/assets/css/login.css" />
+
+    <!--ở hai link css này khi đẩy lên hosting thì phải thêm templates ở sau assets-->
     
 </head>
 <!--end::Head-->
